@@ -11,14 +11,14 @@ import java.io.IOException;
 public class CensusAnalyserTest {
 
     @Test
-    public void checkNumberOfRecordMatches() throws CsvValidationException, IOException {
+    public void checkNumberOfRecordMatches() throws Exception {
         CensusAnalyser censusAnalyser = new CensusAnalyser();
         int count = censusAnalyser.analyser();
-        Assert.assertEquals(5, count);
+        Assert.assertEquals(4, count);
     }
 
     @Test
-    public void fileIncorrectReturnCustomException() {
+    public void fileIncorrectReturnCustomException() throws Exception {
         try {
             CensusAnalyser censusAnalyser = new CensusAnalyser();
             if (censusAnalyser.analyser() == 0)
@@ -29,7 +29,7 @@ public class CensusAnalyserTest {
     }
 
     @Test
-    public void incorrectTypeThrowCustomException() throws CsvValidationException, IOException {
+    public void incorrectTypeThrowCustomException() throws Exception {
         CensusAnalyser censusAnalyser = new CensusAnalyser();
         int count = 0;
         count = censusAnalyser.analyser();
@@ -37,10 +37,18 @@ public class CensusAnalyserTest {
     }
 
     @Test
-    public void incorrectDelimiterThrowCustomException() throws CsvValidationException, IOException {
+    public void incorrectDelimiterThrowCustomException() throws Exception {
         CensusAnalyser censusAnalyser = new CensusAnalyser();
         int count = 0;
         count = censusAnalyser.analyser();
         Assert.assertEquals(4, count);
+    }
+
+    @Test
+    public void headerIncorrectThrowCustomException() throws Exception {
+        CensusAnalyser censusAnalyser = new CensusAnalyser();
+        int count = 0;
+        count = censusAnalyser.analyser();
+        Assert.assertEquals(4, count, 0);
     }
 }

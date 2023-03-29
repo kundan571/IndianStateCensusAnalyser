@@ -1,20 +1,32 @@
 package com.censusanalyser;
 
 import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvValidationException;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+class Header {
+    String SrNo, state, population;
+
+    public Header(String srNo, String state, String population) {
+        this.SrNo = srNo;
+        this.state = state;
+        this.population = population;
+    }
+
+    @Override
+    public String toString() {
+        return this.SrNo + " " + this.state + " " + this.population;
+    }
+}
+
 public class CensusAnalyser {
 
-    public int analyser() throws IOException, CsvValidationException {
-        int count = 0;
-        int lineNumber = 0;
-        List<Census> censusList = new ArrayList<>();
+    public int analyser() throws Exception {
+        int count = 0, lineNumber = 0;
+        List<Census> censusData = new ArrayList<>();
         File file;
         CSVReader reader;
         try {
@@ -22,35 +34,39 @@ public class CensusAnalyser {
                 file = new File("census.csv");
                 reader = new CSVReader(new FileReader(file));
             } catch (RuntimeException e) {
-                throw new DelimiterException();
+                //Catches custom incorrect file exception
+                throw new CustomException();
             }
-
             String[] line;
             try {
                 while ((line = reader.readNext()) != null) {
-                    if (lineNumber == 0) {
-                        lineNumber++;
-                        continue;
-                    }
-                    ++count;
                     try {
-                        censusList.add(new Census(Integer.valueOf(line[0]), line[1], line[2]));
+                        if (lineNumber == 0) {
+                            System.out.println(new Header(line[0], line[1], line[2]));
+                            lineNumber++;
+                            continue;
+                        }
+                        ++count;
+                        censusData.add(new Census(Integer.valueOf(line[0]), line[1], line[2]));
+                        //Catches custom incorrect type and header file exception
                     } catch (NumberFormatException e) {
                         throw new IncorrectType();
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        throw new HeaderException();
                     }
                 }
             } catch (com.opencsv.exceptions.CsvMalformedLineException e) {
+                //Catches custom incorrect delimiter exception
                 throw new DelimiterException();
             }
-            if (count != censusList.size() - 1) {
-                throw new DelimiterException();
+            if (count != censusData.size()) {
+                //Catches custom incorrect file exception
+                throw new CustomException();
             }
-            censusList.forEach(System.out::println);
+            censusData.forEach(System.out::println);
 
-        } catch (IncorrectType exp) {
-            System.out.println(exp);
-        } catch (DelimiterException exception) {
-            System.out.println(exception);
+        } catch (CustomException | IncorrectType | HeaderException | DelimiterException e) {
+            System.out.println(e);
         }
         return count;
     }
