@@ -12,7 +12,6 @@ public class WriteCsvData {
         File file = new File("census.csv");
         FileWriter fileWriter = new FileWriter(file);
         CSVWriter csvWriter = new CSVWriter(fileWriter);
-
         String[] line1 = {"SrNo.", "State", "Population"};
         String[] line2 = {"1", "Bihar", "400000"};
         String[] line3 = {"2", "WestBengal", "500000"};

@@ -4,6 +4,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,13 +13,18 @@ import java.util.List;
 public class CensusAnalyser {
 
     public int analyser() throws IOException, CsvValidationException {
-        File file = new File("census.csv");
-        CSVReader csvReader = new CSVReader(new FileReader(file));
-        List<String> censusData = new ArrayList<>();
-        String[] line;
         int count = 0;
-        while ((line = csvReader.readNext()) != null) {
-            ++count;
+        try {
+            File file = new File("cens.csv");
+            CSVReader csvReader = null;
+            csvReader = new CSVReader(new FileReader(file));
+            List<String> censusData = new ArrayList<>();
+            String[] line;
+            while ((line = csvReader.readNext()) != null) {
+                ++count;
+            }
+        } catch (Exception e) {
+
         }
         return count;
     }

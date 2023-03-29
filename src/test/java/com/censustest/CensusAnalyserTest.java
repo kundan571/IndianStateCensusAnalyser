@@ -1,6 +1,7 @@
 package com.censustest;
 
 import com.censusanalyser.CensusAnalyser;
+import com.censusanalyser.CustomException;
 import com.opencsv.exceptions.CsvValidationException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,6 +14,17 @@ public class CensusAnalyserTest {
     public void checkNumberOfRecordMatches() throws CsvValidationException, IOException {
         CensusAnalyser censusAnalyser = new CensusAnalyser();
         int count = censusAnalyser.analyser();
-        Assert.assertEquals(5,count);
+        Assert.assertEquals(5, count);
+    }
+
+    @Test
+    public void fileIncorrectReturnCustomException() {
+        try {
+            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            if (censusAnalyser.analyser() == 0)
+                throw new CustomException();
+        } catch (CustomException | IOException | CsvValidationException e) {
+            System.out.println(e.toString());
+        }
     }
 }
